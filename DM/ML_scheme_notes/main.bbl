@@ -1,0 +1,30 @@
+\begin{thebibliography}{4}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Dederichs and Zeller((1983))]{linear}
+P.~H. Dederichs and R.~Zeller.
+\newblock Self-consistency iterations in electronic-structure calculations.
+\newblock \emph{Phys. Rev. B 28, 5462}, (1983).
+
+\bibitem[Gonze((1996))]{Fderiv}
+X.~Gonze.
+\newblock Towards a potential-based conjugate gradient algorithm for order-n
+  self-consistent total energy calculations.
+\newblock \emph{Phys. Rev. B 54, 4383}, (1996).
+
+\bibitem[Anglade and Gonze((2008))]{Fderiv2}
+P.-M. Anglade and X.~Gonze.
+\newblock Preconditioning of self-consistent-field cycles in density-functional
+  theory: The extrapolar method.
+\newblock \emph{Phys. Rev. B 78, 045126}, (2008).
+
+\bibitem[Broyden((1965))]{broyden}
+C.~G. Broyden.
+\newblock A class of methods for solving nonlinear simultaneous equations.
+\newblock \emph{Math. Comp. 19, 577-593}, (1965).
+
+\end{thebibliography}

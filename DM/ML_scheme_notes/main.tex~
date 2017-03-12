@@ -1,0 +1,256 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Masters/Doctoral Thesis
+ 
+% Version 1.43 (17/5/14)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original authors:
+% Steven Gunn 
+% http://users.ecs.soton.ac.uk/srg/softwaretools/document/templates/
+% and
+% Sunil Patel
+% http://www.sunilpatel.co.uk/thesis-template/
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+% Note:
+% Make sure to edit document variables in the Thesis.cls file
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+----------------------------------------------------------------------------------------
+	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+----------------------------------------------------------------------------------------
+
+\documentclass[11pt, oneside]{Thesis} % The default font size and one-sided printing (no margin offsets)
+
+\graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
+%\usepackage{xparse}
+%\usepackage{physics}
+%\usepackage{braket,mleftright}
+%\mleftright
+\usepackage[square, numbers, comma, sort&compress]{natbib} % Use the natbib reference package - read up on this to edit the reference style; if you want text (e.g. Smith et al., 2012) for the in-text references (instead of numbers), remove 'numbers' 
+%\usepackage{txfonts}
+\hypersetup{urlcolor=blue, colorlinks=true} % Colors hyperlinks in blue - change to black if annoying
+\title{\ttitle} % Defines the thesis title - don't touch this
+\usepackage{relsize}
+\usepackage{amsmath}
+\usepackage{adjustbox}
+\usepackage{leftidx}
+\usepackage{epstopdf}
+
+    \newenvironment{dedication}
+        {\vspace{6ex}\begin{quotation}\begin{center}\begin{em}}
+        {\par\end{em}\end{center}\end{quotation}}
+
+\newcommand*{\defeq}{\mathrel{\vcenter{\baselineskip0.5ex \lineskiplimit0pt
+                     \hbox{\scriptsize.}\hbox{\scriptsize.}}}%
+                     =}
+
+
+\newcommand{\veq}{\mathrel{\rotatebox{90}{$=$}}}
+\newcommand{\vneq}{\mathrel{\rotatebox{90}{$\neq$}}}
+
+\renewcommand{\bibname}{References}
+
+\begin{document}
+
+\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+
+\setstretch{1.25} % Line spacing of 1.3
+
+% Define the page headers using the FancyHdr package and set up for one-sided printing
+\fancyhead{} % Clears all page headers and footers
+\rhead{\thepage} % Sets the right side header to show the page number
+\lhead{} % Clears the left side page header
+
+\pagestyle{fancy} % Finally, use the "fancy" page style to implement the FancyHdr headers
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % New command to make the lines in the title page
+
+% PDF meta-data
+\hypersetup{pdftitle={\ttitle}}
+\hypersetup{pdfsubject=\subjectname}
+\hypersetup{pdfauthor=\authornames}
+\hypersetup{pdfkeywords=\keywordnames}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+\begin{center}
+
+%\textsc{\LARGE \univname}\\[1.5cm] % University name
+%\textsc{\Large MPhys Thesis}\\[0.5cm] % Thesis type
+
+\HRule \\[0.4cm] % Horizontal line
+{\Large \bfseries \ttitle}\\[0.4cm] % Thesis title
+\HRule \\[1.5cm] % Horizontal line
+ 
+\begin{minipage}{0.4\textwidth}
+
+%\emph{Author:}\\
+%\href{mailto:anon@cam.ac.uk}{\authornames} % Author name - remove the \href bracket to remove the link
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+%\emph{Supervisors:} \\
+%{\supname} % Supervisor name - remove the \href bracket to remove the link  
+\end{flushright}
+\end{minipage}\\[1cm]
+
+\begin{center}
+Nick Woods
+\end{center} \large
+
+\vspace{2cm}
+
+%\begin{figure}[h]
+%   \centering
+%   \includegraphics[scale=0.08]{CambCrest}
+%\end{figure}
+%\begin{figure}[h]
+%   \centering
+%   \includegraphics[scale=0.5]{logo}
+%\end{figure}
+
+\vspace{3cm}
+
+%\large \textit{An essay submitted in fulfilment of the requirements\\ for the degree of \degreename}\\[0.3cm] % University requirement text
+%\textit{in the}\\[0.2cm]
+%\deptname \\ % Research group name and department name
+ 
+\vspace{8cm}
+
+{\large \today} % Date
+
+
+\vfill
+\end{center}
+
+\end{titlepage}
+
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	QUOTATION PAGE
+%----------------------------------------------------------------------------------------
+
+%\pagestyle{empty} % No headers or footers for the following pages
+
+%\null\vfill % Add some space to move the quote down the page a bit
+
+%\textit{``You miss 100$\%$ of the shots you don't %take"}
+
+%\begin{flushright}
+%Wayne Gretzky\end{flushright}
+
+%\vfill\vfill\vfill\vfill\vfill\vfill\null % Add some space at the bottom to position the quote ust right
+
+%\clearpage % Start a new page
+
+
+%
+%----------------------------------------------------------------------------------------
+%	LIST OF CONTENTS/FIGURES/TABLES PAGES
+%----------------------------------------------------------------------------------------
+
+\pagestyle{fancy} % The page style headers have been "empty" all this time, now use the "fancy" headers as defined before to bring them back
+
+\lhead{\emph{Contents}} % Set the left side page header to "Contents"
+\tableofcontents % Write out the Table of Contents
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - CHAPTERS
+%----------------------------------------------------------------------------------------
+
+
+
+\mainmatter % Begin numeric (1,2,3...) page numbering
+
+\pagestyle{fancy} % Return the page headers back to the "fancy" style
+
+% Include the chapters of the thesis as separate files from the Chapters folder
+% Uncomment the lines as you write the chapters
+
+\makeatletter
+\def\@makechapterhead#1{%
+  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright \normalfont
+    %\ifnum \c@secnumdepth >\m@ne
+    %    \huge\bfseries \@chapapp\space \thechapter
+    %    \par\nobreak
+    %    \vskip 20\p@
+    %\fi
+    \interlinepenalty\@M
+    \Huge \bfseries #1\par\nobreak
+    \vskip 40\p@
+  }}
+  \makeatother
+
+\renewcommand{\chaptername}{}
+
+\input{Chapters/Chapter1}
+\input{Chapters/Chapter2} 
+\input{Chapters/Chapter3}
+%\input{Chapters/Chapter4} 
+%\input{Chapters/Chapter5}
+%\input{Chapters/Chapter6} 
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - APPENDICES
+%----------------------------------------------------------------------------------------
+
+\addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+
+\appendix % Cue to tell LaTeX that the following 'chapters' are Appendices
+
+% Include the appendices of the thesis as separate files from the Appendices folder
+ %Uncomment the lines as you write the Appendices
+
+%\input{Appendices/AppendixA}
+%\input{Appendices/AppendixB}
+%\input{Appendices/AppendixC}
+%\input{Appendices/AppendixD}
+%\input{Appendices/AppendixE}
+
+%\addtocontents{toc}{%
+% \protect\vspace{0em}% 
+% \protect\noindent \textbf{\textcolor{blue}%
+% {Appendices}}\protect\par
+% \protect\vspace{0em}%
+%}
+%\setcounter{secnumdepth}{-1}
+%\input{Appendices/AppendixA}
+%\input{Appendices/AppendixB}
+%\input{Appendices/AppendixC}
+%\input{Appendices/AppendixD}
+
+
+\addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+
+\backmatter
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+%word count: 1027 + 7110 + 1266 + 2463 + 3691 + 630 = 16187
+
+\label{Bibliography}
+
+\lhead{\emph{References}} % Change the page header to say "Bibliography"
+
+\bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
+
+\bibliography{Bibliography} % The references (bibliography) information are stored in the file named "Bibliography.bib"
+
+\end{document}  

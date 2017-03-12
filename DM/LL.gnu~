@@ -1,0 +1,21 @@
+a(q) = (2*q + q**2)**2 + d**2
+b(q) = (2*q - q**2)**2 + d**2
+
+c(q) = (2*q - q**2)/d
+e(q) = (2*q + q**2)/d
+
+tanterm(q) = atan( a(q) ) + atan( b(q) )
+logterm(q) = log( e(q) ) - log( c(q) )
+
+qf = 1.0
+d=0.4
+
+llq(q) = 1 + (2/(qf*3.14159)) * (   1/(q**2) - (d/(2*q**3)) * (atan( c(q) ) + atan( e(q) )) +    (d**2/(8*q**5) + 1/(2*q**3) - 1/(8*q)) * (log( a(q) ) - log( b(q) ))  )
+
+set term pdf
+set output "LL.pdf"
+
+set xrange [0:4]
+
+
+plot llq(x)

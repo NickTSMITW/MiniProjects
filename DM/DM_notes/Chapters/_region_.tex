@@ -1,0 +1,88 @@
+\message{ !name(Chapter1.tex)}
+\message{ !name(Chapter1.tex) !offset(-2) }
+% Chapter 1
+
+\chapter{Theory} % Main chapter title
+
+\label{Chapter1} % For referencing the chapter elsewhere, use \ref{Chapter1} 
+
+\lhead{1. \emph{Theory}} % This is for the header on each page - perhaps a shortened title
+
+%----------------------------------------------------------------------------------------
+\section{Intro}
+
+Solving a set of non-linear equations is the final step in the solution of many practical problems in Physics. This can be formulated as finding the `fixed point' of a multidimensional function
+\begin{align}
+\textbf{g}(\textbf{x}^*) = \textbf{x}^*,
+\end{align}
+or recast as a root finding problem
+\begin{align}
+\label{root}
+\textbf{f}(\textbf{x}^*) = \textbf{g}(\textbf{x}^*) - \textbf{x}^* = \textbf{0} 
+\end{align}
+i.e. find $\textbf{x}^* \in \mathbb{R}^n$ such that the function $\textbf{f} : \mathbb{R}^n \rightarrow \mathbb{R}^n$, defined above, is zero. Fixed point iteration theory states that for a sufficiently well behaved (continuous, etc.) function and input argument, the iterative process $\textbf{g}(\textbf{x}_n) = \textbf{x}_{n+1}$ will converge with some order of convergence. The convergence (both speed and success) of a less well behaved mapping than the $\textbf{g}$ above can be improved beyond fixed point iterations if $\textbf{x}_{n+1}$ is chosen `well'. That is, if one chooses $\textbf{x}_{n+1} = \textbf{h}(\textbf{g}(\textbf{x}^{\text{in}}_n) = \textbf{x}^{\text{out}}_{n}, \textbf{x}_n^{\text{in}})$ with $\textbf{h}$ a function defined to assist convergence toward Eq$.$ (\ref{root}). All methods below seek to find the form of $\textbf{h}$ such that Eq$.$ (\ref{root}) can be achieved, and be achieved as fast as possible.
+
+The above can now be rearranged in terms of Kohn-Sham DFT. The Kohn-Sham Hamiltonian, $H^{\text{ks}}$, solves an eigenproblem,
+\begin{align}
+\label{KSH}
+H^{\text{ks}} \psi_i = \epsilon_i \psi_i. 
+\end{align} 
+However, one finds that the solutions, $\psi_i$, depends on the input, $H^{\text{ks}}$, through the electron density -- $H^{\text{ks}} = H^{\text{ks}}(\rho)$ where,
+\begin{align}
+\label{rout}
+\rho(\textbf{r}) = \sum_{i \in \text{occupied}} |\psi_i(\textbf{r})|^2.
+\end{align} 
+Hence, the above process (Eq$.$ (\ref{KSH}) and Eq$.$ (\ref{rout})) can be compacted into a \textit{self-consistent field operator} $F$, satisfying
+\begin{align}
+F(\rho^{\text{in}}) = \rho^{\text{out}}. 
+\end{align} 
+The $\rho^*$ that satisfies both Eq$.$ (\ref{KSH}) and Eq$.$ (\ref{rout}), i.e. $\rho^{\text{in}} = \rho^{\text{out}}$, is the electron density that solves KS DFT for a given external potential, system size, etc. One now seeks the function $\textbf{h}(\rho^{\text{in}}, \rho^{\text{out}})$ such that $\rho^{\text{in}} = \rho^{\text{out}}$ is satisfied (within some tolerance) as quickly as possible -- `\textit{density mixing}'.  The analogous function to $\textbf{f}$ in Eq$.$ (\ref{root}) is now defined as the \textit{residual} -- $R[\rho(\textbf{r})] =  \rho^{\text{in}} - \rho^{\text{out}}$, where $\textbf{h}$ drives $R$ toward zero, thus finding the ground state electron density $\rho^*$ ($R[\rho^*] = 0$). A few `problem dependent' properties can now be noted: firstly, the evaluation of the function $F$ is extremely costly, as it involves the diagonalisation of a $N_{\text{pw}} \times N_{\text{pw}}$ matrix. This means one would favour a density mixing scheme which converges in a low iteration count, at the cost of many computations per iteration (to an extent). Furthermore, the analytic form of the derivative $\partial_{\rho} F$ is not readily available, meaning some linearised numerical approximation will be required in any mixing scheme requiring a derivative. This derivative is most conventionally stored in an $N_{\text{pw}} \times N_{\text{pw}}$ matrix (in line with $H^{\text{ks}}$) which is prohibitively large, both in terms of computation cost and in storage requirements (when applying some mixing scheme). One therefore seeks a density mixing scheme which can be executed with limit memory requirements (i.e. not storing $N_{\text{pw}} \times N_{\text{pw}}$ matrices), and converges in a low number of SCF cycles.
+
+sdfsfsfsdf
+
+These difficulties are considered in choosingsdfsfsdfsdfsdfsdfdsffs  \\
+
+
+
+
+some more background in DFT
+
+why is it hard? expand on the DFT dependent difficulties to the solution of the fixed point problem. 
+
+the key foundational methods: Pulay, broyden 1 and 2, anderson, kerker. 
+
+note on skippping of spin so far. 
+
+where are dielectrics? 
+
+step by step improvements of each method until castep
+
+Marks and luke...
+
+
+
+
+
+\section{Newton's Method}
+
+Newton's method is an iterative formula for updating an initial guess $\textbf{x}^{(0)}$ until Eq$.$ (\ref{root}) is satisfied. This formula is easy to derive, by considering a perturbation vector, $\textbf{h} \in \mathbb{R}^n$. We assume our initial $\textbf{x}$ is close to the root, such that applying this perturbation will bring us to the root: $\textbf{f}({\textbf{x} + \textbf{h}}) = 0$ -- the goal is to therefore find the $\textbf{h}$ that satisfies this equation, or in practice, a $\textbf{h}$ that will drive subsequent values of $\textbf{x}$ closer to satisfying it. 
+
+To find this $\textbf{h}$, the Taylor expansion of $f_i(\textbf{x}+\textbf{h})$ about $\textbf{x}$ is computed,
+\begin{align}
+f_i(\textbf{x}+\textbf{h}) =& f_i(\textbf{x}) + \sum_j \frac{\partial f_i( \textbf{x})}{\partial x_j} h_j + \mathcal{O}(||\textbf{h}||^2), \\ \label{taylor}
+\textbf{f}(\textbf{x}+\textbf{h}) =& \textbf{f}(\textbf{x}) + J_f(\textbf{x}) \textbf{h} + \mathcal{O}(||\textbf{h}||^2).
+\end{align}
+where $J_f(\textbf{x})$ is the Jacobian matrix of $f$ at $\textbf{x}$ -- $J_f(\textbf{x})_{ij} = \frac{\partial f_i}{\partial x_j}$. The larger $||\textbf{h}||$ is, the Taylor expansion will deviate further from the real value of the function. Thus the initial $\textbf{h}$ that is calculated will bring $\textbf{x}$ much closer to the root (provided it was 'close' to the root to start with), but will over or undershoot due to the first order nature of the Taylor expansion. Taylor expansions are then repeatedly done as $\textbf{h}$ (the absolute error in $\textbf{x} - \textbf{x}_{\text{root}}$) tends to zero. This defines the self-consistent process to find  $\textbf{x}_{\text{root}}$ from a suitable initial value,
+\begin{align}
+\textbf{x}^{(n+1)} = \textbf{x}^{(n)} + \textbf{h}.
+\end{align} 
+Where $\textbf{h}$ is obtained from Eq$.$ (\ref{taylor}) via
+\begin{align}
+\textbf{f}(\textbf{x}+\textbf{h}) = \textbf{0},\\
+\textbf{h} = -J^{-1}_f(\textbf{x})\textbf{f}(\textbf{x}),
+\end{align}  
+producing,
+\begin{align}
+\textbf{x}^{(n+1)} = \textbf{x}^{(n)} -J^{-1}_f(\textbf{x})\textbf{f}(\textbf{x}).
+\end{align}
+\message{ !name(Chapter1.tex) !offset(-88) }

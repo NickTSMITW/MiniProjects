@@ -1,0 +1,7 @@
+task : singlepoint
+cut_off_energy    : 600 eV  
+max_scf_cycles : 1000  
+opt_strategy      : speed  
+num_dump_cycles   : 0  
+mixing_scheme : linear
+xc_functional     : PBE

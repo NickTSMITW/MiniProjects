@@ -1,0 +1,15 @@
+\contentsline {chapter}{Contents}{i}{dummy.1}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.3}
+\contentsline {chapter}{\numberline {2}Theory}{2}{chapter.4}
+\contentsline {section}{\numberline {2.1}Marks and Luke Implementation}{2}{section.5}
+\contentsline {subsection}{\numberline {2.1.1}$Y_n$ and $S_n$}{2}{subsection.7}
+\contentsline {subsection}{\numberline {2.1.2}\Psi _n}{3}{subsection.22}
+\contentsline {subsection}{\numberline {2.1.3}The Initial Matrix $A_0$}{4}{subsection.25}
+\contentsline {subsection}{\numberline {2.1.4}\sigma _n}{4}{subsection.27}
+\contentsline {subsection}{\numberline {2.1.5}$A_n$}{5}{subsection.30}
+\contentsline {subsection}{\numberline {2.1.6}A Note on Preconditioning}{5}{subsection.32}
+\contentsline {chapter}{\numberline {3}Application}{6}{chapter.33}
+\contentsline {section}{\numberline {3.1}CASTEP}{6}{section.34}
+\vspace {2em}
+\vspace {2em}
+\contentsline {chapter}{References}{7}{dummy.35}

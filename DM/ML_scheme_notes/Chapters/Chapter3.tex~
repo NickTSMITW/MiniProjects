@@ -1,0 +1,142 @@
+% Chapter 1
+
+\chapter{Theory} % Main chapter title
+
+\label{Chapter1} % For referencing the chapter elsewhere, use \ref{Chapter1} 
+
+\lhead{1. \emph{Theory}} % This is for the header on each page - perhaps a shortened title
+
+%----------------------------------------------------------------------------------------
+\section{The Problem}
+
+Solving a set of non-linear equations is the final step in the solution of many practical problems in Physics. This can be formulated as finding the `fixed point' of a multidimensional function
+\begin{align}
+\textbf{g}(\textbf{x}^*) = \textbf{x}^*,
+\end{align}
+or recast as a root finding problem
+\begin{align}
+\label{root}
+\textbf{f}(\textbf{x}^*) = \textbf{g}(\textbf{x}^*) - \textbf{x}^* = \textbf{0} 
+\end{align}
+i.e. find $\textbf{x}^* \in \mathbb{R}^n$ such that the function $\textbf{f} : \mathbb{R}^n \rightarrow \mathbb{R}^n$, defined above, is zero. Fixed point iteration theory states that for a sufficiently well behaved (continuous, etc.) function and input argument, the iterative process $\textbf{g}(\textbf{x}_n) = \textbf{x}_{n+1}$ will converge with some order of convergence. The convergence (both speed and success) of a less well behaved operation than the $\textbf{g}$ above can be improved beyond fixed point iterations if $\textbf{x}_{n+1}$ is chosen `well'. That is, if one chooses $\textbf{x}_{n+1} = \textbf{h}(\textbf{g}(\textbf{x}^{\text{in}}_n) = \textbf{x}^{\text{out}}_{n}, \textbf{x}_n^{\text{in}})$ with $\textbf{h}$ a function defined to assist convergence toward Eq$.$ (\ref{root}). All methods below seek to find the form of $\textbf{h}$ such that Eq$.$ (\ref{root}) can be achieved, and be achieved as fast as possible in the specific case of Kohn-Sham DFT.
+
+The above can now be rearranged in terms of Kohn-Sham (KS) DFT. The KS Hamiltonian, $H^{\text{ks}}$, solves an eigenproblem,
+\begin{align}
+\label{KSH}
+H^{\text{ks}} \psi_i = \epsilon_i \psi_i. 
+\end{align} 
+However, one finds that the solutions, $\psi_i$, depend on the input, $H^{\text{ks}}$, through the electron density -- $H^{\text{ks}} = H^{\text{ks}}(\rho)$ where,
+\begin{align}
+\label{rout}
+\rho(\textbf{r}) = \sum_{i \in \text{occupied}} |\psi_i(\textbf{r})|^2.
+\end{align} 
+Hence, the above process (Eq$.$ (\ref{KSH}) and Eq$.$ (\ref{rout})) can be compacted into a \textit{self-consistent field operator} $F$, satisfying
+\begin{align}
+F[\rho^{\text{in}}] = \rho^{\text{out}}. 
+\end{align} 
+The $\rho^*$ that satisfies both Eq$.$ (\ref{KSH}) and Eq$.$ (\ref{rout}), i.e. $\rho^{\text{in}} = \rho^{\text{out}}$, is the electron density that solves KS DFT for a given external potential, system size, etc. One now seeks the function $\textbf{h}(\rho^{\text{in}}, \rho^{\text{out}})$ such that $\rho^{\text{in}} = \rho^{\text{out}}$ is satisfied (within some tolerance) as quickly as possible -- `\textit{density mixing}'.  The analogous function to $\textbf{f}$ in Eq$.$ (\ref{root}) is now defined as the \textit{residual} -- $R[\rho(\textbf{r})] =  \rho^{\text{in}} - \rho^{\text{out}}$, where $\textbf{h}$ drives $R$ toward zero, thus finding the ground state electron density $\rho^*$ ($R[\rho^*] = 0$). A few `problem dependent' properties can now be noted: firstly, the evaluation of the operation $F$ is extremely costly, as it involves (iterative) diagonalisation of an $N_{\text{pw}} \times N_{\text{pw}}$ matrix. This means one would favour a density mixing scheme which converges in a low iteration count, at the cost of many computations per iteration (to an extent). Furthermore, the analytic form of the derivative $\partial_{\rho} F$ is not readily available, meaning some finite-differenced numerical approximation will be often need to be computer (atleast for the first step in an iterative process). This derivative -- the Jacobian -- is conventionally stored in a matrix which is prohibitively large (size dependent on the discretisation of the space), both in terms of computation cost and in storage requirements (when applying some mixing scheme). One therefore seeks a density mixing scheme which can be executed with limited memory requirements (i.e. not storing such large matrices), and converges in a low number of SCF cycles. With this in mind, the difficulties in applying some of the `naive' approaches to the SCF process can be outlined. 
+
+
+
+
+
+
+
+
+\section{Characterisation of the Solutions}
+
+
+The simplest update to the density would be to treat the above system as a fixed point iteration, feeding the output density back in as the input density by computing $\rho_{n+1}=F[\rho_{n}]$ -- this turns out to be unsuitable for a variety of reasons. To elaborate, first note that the iterates will take the form $\rho^{\text{in}}_{n+1} = \rho^{\text{out}}_{n} = F[\rho^{\text{in}}_{n}]$. In practice, the initial guess of the density is not far from the converged density by simply modelling atoms at $\textbf{R}_{\mu}$ as Gaussians of charge at $\textbf{R}_{\mu}$. This can be seen in Fig$.$ \ref{convergence}, where an FCC Al structure took 5 iterations to converge within tolerance, visually it can be seen the initial guess is very close to converged density (where after only 1 iteration the changes in $\rho$ become not visible to the eye). If this is the case the operation $F$ can be linearised about $\rho^*$,
+\begin{gather}
+\rho^* + \delta \rho^{\text{out}}_n = F[\rho^* + \delta \rho^{\text{in}}_{n}] \approx F[\rho^*] + \frac{\delta F}{\delta \rho}\bigg\rvert_{\rho^*} \delta \rho^{\text{in}}_{n} = \rho^* + \frac{\delta F}{\delta \rho}\bigg\rvert_{\rho^*}  \delta \rho^{\text{in}}_{n}, \\ \label{linearresponse}
+\implies \delta \rho^{\text{out}}_n = \frac{\delta F}{\delta \rho}\bigg\rvert_{\rho^*}  \delta \rho^{\text{in}}_{n}, \\
+\implies \delta \rho^{\text{in}}_{n+1} = \frac{\delta F}{\delta \rho}\bigg\rvert_{\rho^*}  \delta \rho^{\text{in}}_{n}.
+\end{gather}
+\begin{figure}
+{\hspace{-1em}}\includegraphics[width=6in]{Al_convergence.pdf}
+\caption{SCF convergence of FCC aluminium in CASTEP using Pulay mixing.}
+\label{convergence}
+\end{figure}
+Any use of Eq$.$ (\ref{linearresponse}) denotes a density mixing scheme in the \textit{linear response regime} -- i.e. it is assumed that small perturbations to the input charge density of KS DFT depend linearly on the output charge density. In general this clearly doesn't hold, but as mentioned, for charge densities sufficiently close to convergence, the relation is a good approximation. $F : \mathbb{R}^3 \rightarrow \mathbb{R}^3$ and $\rho \in \mathbb{R}^3$, so the derivative term at a point \textbf{r} in real space (ignoring any discritisation of the domain) will be a matrix $\frac{\delta F}{\delta \rho} \sim M \in \mathbb{R}^{3 \times 3}$. It will later be shown that $M$ is closely related to the DFT dielectric response of the input system. From a mathematical perspective, one can ask what the conditions on $M$ are to guarantee convergence. Convergence is defined as $\delta \rho^{\text{in}}_{n+1} \rightarrow 0$ as $n \rightarrow \infty$, or
+\begin{gather}
+M   \delta \rho^{\text{in}}_{n} = (M)^n \delta \rho^{\text{in}}_{1} \rightarrow 0.
+\end{gather}
+It will be assumed here (although it can be shown \citep{linear}) that $M$ is of full rank, and can be diagonalised using $\{  \textbf{e}_i \}$ as an orthonormal basis -- $M^d_{ij} =  \delta_{ij} \lambda_i | \textbf{e}_i \rangle \langle \textbf{e}_j |$ with $\{ \lambda_i \}$ the spectrum of $M$\footnote{Here, $M^d$ is a transformed matrix sharing some of the same properties of $M$, namely, $M^n \rightarrow 0$ iff $(M^d)^n \rightarrow 0$.}. Since $\langle \textbf{e}_i | \textbf{e}_j \rangle = \delta_{ij}$,
+\begin{gather}
+((M^d)^n)_{ii} = (\lambda_i)^n   | \textbf{e}_i \rangle \langle \textbf{e}_i |, \\
+\implies M \delta \rho^{\text{in}}_n \rightarrow 0 \text{ iff } | \lambda_i | < 1 \text{ } \forall \text{ } i.
+\end{gather} 
+The question now becomes, for typical DFT input systems, is the condition $ | \lambda_i | < 1 $ always satisfied? The answer is no, and for some illustrative models studied in Ref$.$ \citep{linear} $| \lambda_i | \sim 100$, causing a strong divergence from $\rho^*$. Clearly a simple fixed point iteration-esque update to $\rho_{n+1}$ is unsuitable in general DFT calculations. It seems natural to now ask how one could incorporate a parameter to suppress $| \lambda_i |$ such that it satisfies the convergence criteria for any system of interest. This leads to the most simple density mixing scheme able to converge a (not-so-wide) variety of input systems -- \textit{linear mixing}. Instead of using $\rho^{\text{in}}_{n+1} = \rho^{\text{out}}_{n}$, one incorporates a damping parameter $\alpha$ as such,
+\begin{gather}
+\rho^{\text{in}}_{n+1} =  \rho^{\text{in}}_{n} + \alpha ( \rho^{\text{out}}_{n} -  \rho^{\text{in}}_{n} ) =  \rho^{\text{in}}_{n} + \alpha R[\rho^{\text{in}}_{n}].
+\end{gather}
+It can be seen that, defining convergence of $\delta \rho$ similarly to above, the convergence criteria now becomes $|1+\alpha (\lambda_i - 1)|<1$. As $\alpha$ can be arbitrarily tuned such that this is true, the problem has been (superficially) solved. Supposing $M$ is positive definite (i.e. not worrying about the case of $\lambda_{\text{min}}<0$), $\alpha$ must be chosen such that $|1+\alpha(\lambda_{\text{max}} - 1)| < 1$, meaning $\rho$ is guaranteed to converge for all $\lambda_i$. However, the speed of convergence is related to how close $|1+\alpha(\lambda_{\text{max}} - 1)|$ is to unity -- if it is only slightly less, $|1+\alpha(\lambda_{\text{max}} - 1)|^n$ will take large $n$ to reach zero within tolerance. Moreover, if $\alpha$ is too low, the change in the $\rho_{n+1}$ becomes minuscule per iteration for eigenvalues at or close to $\lambda_{\text{min}}$, leading to slow convergence. Therefore, an optimal value of $\alpha$ must be deduced, but how efficacious this choice is clearly depends on the ratio $\frac{\lambda_{\text{max}}}{\lambda_{\text{min}}}$ -- an important quantity in numerical analysis, the \textit{condition number} of $M$. In general $M$ is not well conditioned, e.g. for metallic materials the condition number of $M$ turns out to be divergent proportional to the size of the unit cell [source?], and hence certain systems can take large amounts of time to converge (to the point where a user would say the calculation doesn't converge in a practical sense).
+
+The above discussion on the convergence of fixed point iterations and linear mixing was mathematical in nature, but the lack of convergence of both methods can also be interpreted physically in a process dubbed `charge sloshing'. To bring physicality into the analysis, one starts by interpreting $M = \frac{\delta F}{\delta \rho}$ in Eq$.$ (\ref{linearresponse}). The functional derivative of the operator $F$ has been investigated by multiple sources \citep{linear,Fderiv}, and it can be shown that $M$ relates to the dielectric constant matrix $\epsilon$ in the following way,
+\begin{gather}
+M = \textbf{I} - \epsilon^{\text{DFT}}.
+\end{gather}
+The dielectric describes how a given system will respond to an (applied) perturbation in the electron density -- $\frac{\delta \rho^{\text{out}}}{\delta \rho^{\text{in}}}$. Applying a perturbation in the electron density is mimicking the application an electric field, and measuring the response of the electrons (which is the classical electromagnetism definition of a dielectric). It will be shown below that knowing the dielectric of the input system can greatly improve convergence to the ground state, firstly however a subtle but important distinction can be made. When one says `the dielectric of the input system', what is meant by this is the dielectric of the input system \textit{as it would be in} KS DFT. The idea of density mixing is to converge KS DFT to its ground state as quickly as possible, and the dielectric that is most efficacious in achieving this is not the dielectric of the real material, but the dielectric as it would be in KS DFT\footnote{Obviously these are ideally the same, but it is unfortunately not always the case.}. This fact becomes not so subtle when the dielectric (or some other mathematical object designed to assist convergence) requires the \textit{band gap} as a parameter. One might initially (correctly) identify that DFT systematically underestimates the band gap, and then (incorrectly) deduce that convergence processes relying on the band gap are unsuitable (or at the very least non-optimal). However, it is precisely the DFT band gap that is required for optimal performance, as density mixing is a numerical technique designed to extract the correct output answer from the theory, and if this answer differs from experiment, the problem will be theory-side.
+
+Analysis in \citep{Fderiv2} confirms that \textit{at the fixed point} $\rho^*$, $\epsilon$ (and therefore $M$) is positive definite as presumed (which removes some divergence possibilities, allowing $\alpha$ to remain positive). Breaking down $\epsilon$ component by component reveals that perturbations in the charge density and \textit{Hartree} potential\footnote{Ignoring the exchange-correlation component for now, as it does not affect the ensuing analysis.} affect one-another as so,
+\begin{gather}
+\delta V_h(\textbf{r}) = \int \frac{\delta \rho(\textbf{r}')}{|\textbf{r} - \textbf{r}'|} \text{ } d\textbf{r}', \label{slosh1} \\
+\delta \rho(\textbf{r}) = \int \chi^{\text{DFT}} (\textbf{r},\textbf{r}') \delta V_h(\textbf{r}') \text{ } d\textbf{r}'. \label{slosh2}
+\end{gather}
+In this context, $\chi^{\text{DFT}}$ is the independent (DFT) electron \textit{susceptability} -- a real, symmetric matrix characterising how `susceptible' the electrons in an input system are to changes in the potential, $\chi^{\text{DFT}} \sim \frac{\delta V_h}{\delta \rho}$. One can see that $M$ will pick up amplified contributions from changes in the charge density at long range from Eq$.$ (\ref{slosh1}). In Fourier space, Eq$.$ (\ref{slosh1}) takes the form,
+\begin{gather}
+\delta \tilde{V}_h(\textbf{G}) \sim \frac{\delta \tilde{\rho}(\textbf{G})}{|\textbf{G}|^2}.
+\end{gather}
+Hence, finite changes in the density at short wavelength Fourier modes ($\delta \rho$ at long range in real space) will be amplified by the factor of $|G|^{-2}$. This then has a back-reaction on the iteratively updated output density, Eq$.$ (\ref{slosh2}). Depending on the susceptibility, a large change will be incurred in $\delta \rho^{\text{out}}_{n+1}$, and the system will fail to converge. The dependence on $\chi$ (and therefore $\epsilon$) is the link between the mathematical analysis above, and the discussion here. If the maximum eigenvalue is too large (or the spectrum is not dense in the linear mixing case), the electrons are `too' susceptible to changes in the potential causing divergence (or extremely slow convergence). The physical picture being that, when the material is `too' susceptible (relating to the eigenvalues of $\chi$) a small change in the Hartree potential (for example the one induced in the mixing schemes) causes a large change in the charge density from low $|G|$ wavevectors. This in turn back-reacts onto $V_h$ trying to accommodate for the change in $\rho$, which sets up a `back-and-forth' of continuous overcorrection of $\rho$ and $V_h$ -- sloshing. Unfortunately, charge sloshing is present in all mixing algorithms to an extent, where the effect is more pronounced in high $\chi$ materials, like metals, and particularly when the unit cell (and charge inside the cell) is large\footnote{It seems intuitive that for more charge present over longer ranges, the sloshing will be more pronounced.}. In reference to the earlier discussion, the reason why Ref$.$ \citep{linear} finds $\lambda_i \sim 100$ is precisely because they are modelling a metallic system whose electrons respond much more freely to the `applied field' in contrast to an insulating system. This is atleast partially solved by the use of a model dielectric. In practice, the model dielectric matrix $\sim M$ is applied to the electron density in Fourier space, and is specifically designed to weight changes of $\rho$ at low $|G|$ less, heavily damping the sloshing effect. In mathematical terms, the dielectric matrix acts as a \textit{preconditioner}, which takes the problem at hand (i.e. driving $\rho^{\text{guess}} \rightarrow \rho^*$) and changes the problem (by application of the preconditioner) to make it more suitably solved by the mixing algorithm.
+
+The above analysis has highlighted two key considerations when seeking to improve the SCF cycles in KS DFT -- the choice of mixing algorithm, and the choice of preconditioner. It is common in practice to apply the preconditioner at each iteration of the mixing algorithm (specified by $\textbf{h}$). Now the base theory has been laid out, one can begin to seek so-called \textit{advanced mixing} algorithms to assist convergence, and improved preconditioners/dielectric models. 
+
+
+\section{Improving the SCF Process}
+
+\subsection{Advanced Density Mixing}
+
+\subsubsection{Newton's Method}
+
+Newton's method is an iterative formula for updating an initial guess $\textbf{x}^{(0)}$ until Eq$.$ (\ref{root}) is satisfied. This formula is easy to derive, by considering a perturbation vector, $\textbf{h} \in \mathbb{R}^n$. We assume our initial $\textbf{x}$ is close to the root, such that applying this perturbation will bring us to the root: $\textbf{f}({\textbf{x} + \textbf{h}}) = 0$ -- the goal is to therefore find the $\textbf{h}$ that satisfies this equation, or in practice, a $\textbf{h}$ that will drive subsequent values of $\textbf{x}$ closer to satisfying it. 
+
+To find this $\textbf{h}$, the Taylor expansion of $f_i(\textbf{x}+\textbf{h})$ about $\textbf{x}$ is computed,
+\begin{align}
+f_i(\textbf{x}+\textbf{h}) =& f_i(\textbf{x}) + \sum_j \frac{\partial f_i( \textbf{x})}{\partial x_j} h_j + \mathcal{O}(||\textbf{h}||^2), \\ \label{taylor}
+\textbf{f}(\textbf{x}+\textbf{h}) =& \textbf{f}(\textbf{x}) + J_f(\textbf{x}) \textbf{h} + \mathcal{O}(||\textbf{h}||^2).
+\end{align}
+where $J_f(\textbf{x})$ is the Jacobian matrix of $f$ at $\textbf{x}$ -- $J_f(\textbf{x})_{ij} = \frac{\partial f_i}{\partial x_j}$. The larger $||\textbf{h}||$ is, the Taylor expansion will deviate further from the real value of the function. Thus the initial $\textbf{h}$ that is calculated will bring $\textbf{x}$ much closer to the root (provided it was 'close' to the root to start with), but will over or undershoot due to the first order nature of the Taylor expansion. Taylor expansions are then repeatedly done as $\textbf{h}$ (the absolute error in $\textbf{x} - \textbf{x}_{\text{root}}$) tends to zero. This defines the self-consistent process to find  $\textbf{x}_{\text{root}}$ from a suitable initial value,
+\begin{align}
+\textbf{x}^{(n+1)} = \textbf{x}^{(n)} + \textbf{h}.
+\end{align} 
+Where $\textbf{h}$ is obtained from Eq$.$ (\ref{taylor}) via
+\begin{align}
+\textbf{f}(\textbf{x}+\textbf{h}) = \textbf{0},\\
+\textbf{h} = -J^{-1}_f(\textbf{x})\textbf{f}(\textbf{x}),
+\end{align}  
+producing,
+\begin{align}
+\textbf{x}^{(n+1)} = \textbf{x}^{(n)} -J^{-1}_f(\textbf{x})\textbf{f}(\textbf{x}).
+\end{align}
+
+\subsection{Preconditioning and Dielectric Models}
+
+
+some more background in DFT
+
+why is it hard? expand on the DFT dependent difficulties to the solution of the fixed point problem. 
+
+the key foundational methods: Pulay, broyden 1 and 2, anderson, kerker. 
+
+note on skippping of spin so far. 
+
+where are dielectrics? 
+
+step by step improvements of each method until castep
+
+Marks and luke...
+
+
+
+
+

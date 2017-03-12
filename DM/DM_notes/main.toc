@@ -1,0 +1,15 @@
+\contentsline {chapter}{Contents}{i}{dummy.1}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.3}
+\contentsline {chapter}{\numberline {2}Theory}{2}{chapter.4}
+\contentsline {section}{\numberline {2.1}The Problem}{2}{section.5}
+\contentsline {section}{\numberline {2.2}Characterisation of the Solutions}{3}{section.11}
+\contentsline {section}{\numberline {2.3}Improving the SCF Process}{9}{section.43}
+\contentsline {subsection}{\numberline {2.3.1}Advanced Density Mixing}{9}{subsection.44}
+\contentsline {subsubsection}{\numberline {2.3.1.1}Newton's Method}{10}{subsubsection.45}
+\contentsline {subsubsection}{\numberline {2.3.1.2}Broyden's Methods}{11}{subsubsection.55}
+\contentsline {subsection}{\numberline {2.3.2}Preconditioning and Dielectric Models}{14}{subsection.79}
+\contentsline {chapter}{\numberline {3}Application}{16}{chapter.80}
+\contentsline {section}{\numberline {3.1}CASTEP}{16}{section.81}
+\vspace {2em}
+\vspace {2em}
+\contentsline {chapter}{References}{17}{dummy.82}

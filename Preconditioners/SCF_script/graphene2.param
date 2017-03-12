@@ -1,0 +1,12 @@
+task : singlepoint
+#task : bandstructure
+cut_off_energy : 700 eV
+xc_functional : LDA
+opt_strategy_bias : +3
+page_wvfns : 0
+max_scf_cycles : 200
+NUM_DUMP_CYCLES : 0
+#num_proc_in_smp : 4
+grid_scale : 2.0
+mixing_scheme : broyden
+#continuation : default

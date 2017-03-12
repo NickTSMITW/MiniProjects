@@ -1,0 +1,37 @@
+%@article{guth_inf,
+%	author = {A. H. Guth},
+%	title = {Inflationary universe: A possible solution to the horizon and flatness problems},
+%	journal = {Phys. Rev. D 23, 347},
+%	year = {(1981)},
+%	}
+	
+
+@article{payne,
+   author = {M. C. Payne \textit{et al}.},
+	title = {Iterative minimization techniques for ab initio total-energy calculations: molecular dynamics and conjugate gradients},
+	journal = {Rev. Mod. Phys. 64, 1045},
+	year = {(1992)},
+	}
+	
+@article{linear,
+   author = {P. H. Dederichs and R. Zeller},
+	title = {Self-consistency iterations in electronic-structure calculations},
+	journal = {Phys. Rev. B 28, 5462},
+	year = {(1983)},
+	}
+	
+
+@article{Fderiv,
+   author = {X. Gonze},
+	title = {Towards a potential-based conjugate gradient algorithm for order-N self-consistent total energy calculations},
+	journal = {Phys. Rev. B 54, 4383},
+	year = {(1996)},
+	}
+
+
+@article{Fderiv2,
+   author = {P.-M. Anglade and X. Gonze},
+	title = {Preconditioning of self-consistent-field cycles in density-functional theory: The extrapolar method},
+	journal = {Phys. Rev. B 54, 4383},
+	year = {(1996)},
+	}
